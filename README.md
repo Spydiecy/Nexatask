@@ -2,7 +2,7 @@
 
 NexaTask is a modern, efficient task management system designed to streamline workflow and boost productivity for teams and individuals.
 
-![NexaTask Logo](assets/nexatask-logo.png)
+![logo](https://github.com/user-attachments/assets/24d2335c-d62c-464f-889e-07469dd2e10d)
 
 ## Features
 
@@ -52,8 +52,7 @@ nexatask/
 ├── employee-dashboard.html
 ├── styles.css
 ├── script.js
-├── assets/
-│   └── nexatask-logo.png
+├── favicon.ico
 └── README.md
 ```
 
@@ -78,12 +77,6 @@ Contributions to improve NexaTask are welcome. Please follow these steps:
 ## License
 
 Distributed under the MIT License. See `LICENSE` file for more information.
-
-## Contact
-
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/yourusername/nexatask](https://github.com/yourusername/nexatask)
 
 ---
 
