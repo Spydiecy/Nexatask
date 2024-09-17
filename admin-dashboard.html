@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaTask - Admin Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i><img src="favicon.ico" alt="Logo" height="50" width="50"></i>
+                <h1>NexaTask</h1>
+            </div>
+            <ul>
+                <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-section="employees"><i class="fas fa-users"></i> Employees</a></li>
+                <li><a href="#" data-section="tasks"><i class="fas fa-clipboard-list"></i> Tasks</a></li>
+                <li><a href="#" data-section="analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            </ul>
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </nav>
+        <main class="content">
+            <header>
+                <h2 id="sectionTitle">Dashboard</h2>
+                <div id="adminInfo"></div>
+            </header>
+            <section id="dashboardSection" class="active-section">
+                <div class="dashboard-summary">
+                    <div class="summary-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Total Employees</h3>
+                        <p id="totalEmployees">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-tasks"></i>
+                        <h3>Total Tasks</h3>
+                        <p id="totalTasks">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Completed Tasks</h3>
+                        <p id="completedTasks">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Pending Tasks</h3>
+                        <p id="pendingTasks">0</p>
+                    </div>
+                </div>
+            </section>
+            <section id="employeesSection" class="hidden-section">
+                <h3><i class="fas fa-user-plus"></i> Add New Employee</h3>
+                <form id="addEmployeeForm">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="newEmployeeUsername" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="newEmployeePassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit"><i class="fas fa-plus"></i> Add Employee</button>
+                </form>
+                <div id="employeeList"></div>
+            </section>
+            <section id="tasksSection" class="hidden-section">
+                <h3><i class="fas fa-plus-circle"></i> Assign New Task</h3>
+                <form id="assignTaskForm">
+                    <div class="input-group">
+                        <i class="fas fa-user-check"></i>
+                        <select id="employeeSelect" required>
+                            <option value="">Select Employee</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-heading"></i>
+                        <input type="text" id="taskTitle" placeholder="Task Title" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-align-left"></i>
+                        <textarea id="taskDescription" placeholder="Task Description" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="taskDueDate" required>
+                    </div>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Assign Task</button>
+                </form>
+                <div id="allTasks"></div>
+            </section>
+            <section id="analyticsSection" class="hidden-section">
+                <h3><i class="fas fa-chart-pie"></i> Task Analytics</h3>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h4>Task Status Distribution</h4>
+                        <canvas id="taskStatusChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Tasks by Employee</h4>
+                        <canvas id="tasksByEmployeeChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Task Completion Rate</h4>
+                        <div class="completion-rate">
+                            <span id="completionRate">0%</span>
+                            <canvas id="completionRateChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Recent Activity</h4>
+                        <ul id="recentActivityList" class="recent-activity-list"></ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

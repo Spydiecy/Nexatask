@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaTask - Employee Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i><img src="favicon.ico" alt="Logo" height="50" width="50"></i>
+                <h1>NexaTask</h1>
+            </div>
+            <ul>
+                <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-section="tasks"><i class="fas fa-clipboard-list"></i> My Tasks</a></li>
+            </ul>
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </nav>
+        <main class="content">
+            <header>
+                <h2 id="sectionTitle">Dashboard</h2>
+                <div id="employeeInfo"></div>
+            </header>
+            <section id="dashboardSection" class="active-section">
+                <div class="dashboard-summary">
+                    <div class="summary-card">
+                        <i class="fas fa-tasks"></i>
+                        <h3>Total Tasks</h3>
+                        <p id="totalTasks">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Completed Tasks</h3>
+                        <p id="completedTasks">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Pending Tasks</h3>
+                        <p id="pendingTasks">0</p>
+                    </div>
+                </div>
+            </section>
+            <section id="tasksSection" class="hidden-section">
+                <h3><i class="fas fa-clipboard-check"></i> My Tasks</h3>
+                <div id="employeeTasks"></div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

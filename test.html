@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechFlow Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 20px;
+        }
+        header {
+            background: #3C51A2;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        nav {
+            background: #3C51A2;
+            color: #fff;
+            padding: 0.5rem 0;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .dashboard {
+            background: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .task-list {
+            list-style-type: none;
+        }
+        .task-list li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        button {
+            display: inline-block;
+            background: #3C51A2;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2C3E80;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>TechFlow Dashboard</h1>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="login-form">
+            <h2>Login</h2>
+            <form id="login">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        <div id="admin-dashboard" class="dashboard hidden">
+            <h2>Admin Dashboard</h2>
+            <div id="employee-list">
+                <h3>Employees</h3>
+                <ul id="employees"></ul>
+            </div>
+            <div id="task-assignment">
+                <h3>Assign Task</h3>
+                <form id="assign-task">
+                    <div class="form-group">
+                        <label for="task-name">Task Name:</label>
+                        <input type="text" id="task-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">Task Description:</label>
+                        <textarea id="task-description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="assign-to">Assign To:</label>
+                        <select id="assign-to" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="due-date">Due Date:</label>
+                        <input type="date" id="due-date" required>
+                    </div>
+                    <button type="submit">Assign Task</button>
+                </form>
+            </div>
+        </div>
+        <div id="employee-dashboard" class="dashboard hidden">
+            <h2>Employee Dashboard</h2>
+            <div id="task-list">
+                <h3>My Tasks</h3>
+                <ul class="task-list" id="my-tasks"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const loginForm = document.getElementById('login-form');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const employeeDashboard = document.getElementById('employee-dashboard');
+        const logoutButton = document.getElementById('logout');
+        const employeeList = document.getElementById('employees');
+        const assignTaskForm = document.getElementById('assign-task');
+        const assignToSelect = document.getElementById('assign-to');
+        const myTasksList = document.getElementById('my-tasks');
+
+        // Sample users (in a real app, this would be stored securely on a server)
+        const users = [
+            { id: 1, username: 'admin', password: 'admin123', role: 'admin' },
+            { id: 2, username: 'john', password: 'john123', role: 'employee' },
+            { id: 3, username: 'jane', password: 'jane123', role: 'employee' }
+        ];
+
+        // Current user
+        let currentUser = null;
+
+        // Event listeners
+        document.getElementById('login').addEventListener('submit', handleLogin);
+        logoutButton.addEventListener('click', handleLogout);
+        assignTaskForm.addEventListener('submit', handleTaskAssignment);
+
+        // Check if user is already logged in
+        function checkLoggedIn() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                showDashboard();
+            }
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showDashboard();
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            loginForm.classList.remove('hidden');
+            adminDashboard.classList.add('hidden');
+            employeeDashboard.classList.add('hidden');
+        }
+
+        // Show appropriate dashboard
+        function showDashboard() {
+            loginForm.classList.add('hidden');
+            if (currentUser.role === 'admin') {
+                adminDashboard.classList.remove('hidden');
+                loadEmployees();
+                loadAllTasks();
+            } else {
+                employeeDashboard.classList.remove('hidden');
+                loadEmployeeTasks();
+            }
+        }
+
+        // Load employees for admin dashboard
+        function loadEmployees() {
+            employeeList.innerHTML = '';
+            assignToSelect.innerHTML = '';
+            users.forEach(user => {
+                if (user.role === 'employee') {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    employeeList.appendChild(li);
+
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = user.username;
+                    assignToSelect.appendChild(option);
+                }
+            });
+        }
+
+        // Handle task assignment
+        function handleTaskAssignment(e) {
+            e.preventDefault();
+            const taskName = document.getElementById('task-name').value;
+            const taskDescription = document.getElementById('task-description').value;
+            const assignTo = document.getElementById('assign-to').value;
+            const dueDate = document.getElementById('due-date').value;
+
+            const task = {
+                id: Date.now(),
+                name: taskName,
+                description: taskDescription,
+                assignedTo: parseInt(assignTo),
+                dueDate: dueDate,
+                status: 'Pending'
+            };
+
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            assignTaskForm.reset();
+            loadAllTasks();
+            alert('Task assigned successfully');
+        }
+
+        // Load all tasks for admin dashboard
+        function loadAllTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskList = document.createElement('ul');
+            taskList.className = 'task-list';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                const assignedTo = users.find(u => u.id === task.assignedTo);
+                li.innerHTML = `
+                    <strong>${task.name}</strong><br>
+                    Assigned to: ${assignedTo ? assignedTo.username : 'Unknown'}<br>
+                    Due: ${task.dueDate}<br>
+                    Status: ${task.status}
+                `;
+                taskList.appendChild(li);
+            });
+            const existingTaskList = document.querySelector('#admin-dashboard .task-list');
+            if (existingTaskList) {
+                existingTaskList.replaceWith(taskList);
+            } else {
+                adminDashboard.appendChild(taskList);
+            }
+        }
+
+        // Load tasks for employee dashboard
+        function loadEmployeeTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            myTasksList.innerHTML = '';
+            tasks.forEach(task => {
+                if (task.assignedTo === currentUser.id) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>${task.name}</strong><br>
+                        ${task.description}<br>
+                        Due: ${task.dueDate}<br>
+                        Status: ${task.status}
+                        <button onclick="updateTaskStatus(${task.id})">Update Status</button>
+                    `;
+                    myTasksList.appendChild(li);
+                }
+            });
+        }
+
+        // Update task status
+        function updateTaskStatus(taskId) {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                const newStatus = prompt('Enter new status (Pending, In Progress, Completed):', task.status);
+                if (newStatus && ['Pending', 'In Progress', 'Completed'].includes(newStatus)) {
+                    task.status = newStatus;
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    loadEmployeeTasks();
+                } else {
+                    alert('Invalid status. Please try again.');
+                }
+            }
+        }
+
+        // Initial check for logged in user
+        checkLoggedIn();
+    </script>
+</body>
+</html>
